@@ -1,4 +1,4 @@
-# Tic-tac-toe Game from reactjs.ort tutorial
+# Tic-tac-toe Game from reactjs.org tutorial
 
 ## Additional challenges
 
