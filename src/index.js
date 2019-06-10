@@ -3,22 +3,37 @@ import ReactDOM from 'react-dom';
 
 import './index.css'
 
-class Square extends React.Component {
+class Square extends React.Component { // child component
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: this.props.value,
+    };
+  }
+
   render() {
     return (
       <button
         className="square"
-        onClick={() => {console.log('click on Square:', this.props.value)}}
+        onClick={() => {
+          this.setState({
+            value: 'x',
+          });
+          console.log('click on Square:', this.props.value)}}
       >
-        {this.props.value}
+        {this.state.value}
       </button>
     );
   }
 }
 
-class Board extends React.Component {
+class Board extends React.Component { // parent component
   renderSquare(i) {
-    return <Square value={i} />;
+    return (
+      <Square
+        value={i} // passing props: data flow from parent to children
+      />
+    );
   }
 
   render() {
