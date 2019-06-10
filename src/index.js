@@ -3,35 +3,42 @@ import ReactDOM from 'react-dom';
 
 import './index.css'
 
-class Square extends React.Component { // child component
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: this.props.value,
-    };
-  }
-
+class Square extends React.Component { // child controlled component
   render() {
     return (
       <button
         className="square"
         onClick={() => {
-          this.setState({
-            value: 'x',
-          });
-          console.log('click on Square:', this.props.value)}}
+          this.props.onClick();
+        }}
       >
-        {this.state.value}
+        {this.props.value}
       </button>
     );
   }
 }
 
 class Board extends React.Component { // parent component
+  constructor(props) {
+    super(props);
+    this.state = {
+      squares: new Array(9).fill(null),
+    };
+  }
+
+  handleClick(i) {
+    const squares = this.state.squares.slice();
+    squares[i] = 'x';
+    this.setState({
+      squares: squares,
+    });
+  }
+
   renderSquare(i) {
     return (
       <Square
-        value={i} // passing props: data flow from parent to children
+        value={this.state.squares[i]} // passing props: data flow from parent to children
+        onClick={() => this.handleClick(i)}
       />
     );
   }
