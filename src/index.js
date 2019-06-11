@@ -15,8 +15,6 @@ function Square(props) { // child controlled component
 }
 
 class Board extends React.Component { // parent component
-  
-
   renderSquare(key, i) {
     return (
       <Square
@@ -27,14 +25,14 @@ class Board extends React.Component { // parent component
     );
   }
 
-    render() {
-      let i = 0;
-      const board = Array(3).fill(null).map((_, key) => {
-        const cols = Array(3).fill(null).map((_, key) => {
-          return this.renderSquare(key, i++);
-        })
-        return (<div key={key} className='board-row'>{cols}</div>);
+  render() {
+    let i = 0;
+    const board = Array(3).fill(null).map((_, index) => {
+      const cols = Array(3).fill(null).map((_, index) => {
+        return this.renderSquare(index, i++);
       })
+      return (<div key={index} className='board-row'>{cols}</div>);
+    })
     return (<div>{board}</div>);
   }
 }
