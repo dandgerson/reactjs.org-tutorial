@@ -29,15 +29,13 @@ class Board extends React.Component { // parent component
 
     render() {
       let i = 0;
-      const board = Array(this.props.size.rows).fill(null).map((_, key) => {
-        const cols = Array(this.props.size.cols).fill(null).map((_, key) => {
+      const board = Array(3).fill(null).map((_, key) => {
+        const cols = Array(3).fill(null).map((_, key) => {
           return this.renderSquare(key, i++);
         })
         return (<div key={key} className='board-row'>{cols}</div>);
       })
-    return (
-      <div>{board}</div>
-    );
+    return (<div>{board}</div>);
   }
 }
 
@@ -102,7 +100,6 @@ class Game extends React.Component {
       <div className="game">
         <div className="game-board">
           <Board
-            size={{rows: 3, cols: 3,}}
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
           />
