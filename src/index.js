@@ -17,34 +17,26 @@ function Square(props) { // child controlled component
 class Board extends React.Component { // parent component
   
 
-  renderSquare(i) {
+  renderSquare(key, i) {
     return (
       <Square
+        key={key}
         value={this.props.squares[i]} // passing props: data flow from parent to children
         onClick={() => this.props.onClick(i)}
       />
     );
   }
 
-  render() {
+    render() {
+      let i = 0;
+      const board = Array(this.props.size.rows).fill(null).map((_, key) => {
+        const cols = Array(this.props.size.cols).fill(null).map((_, key) => {
+          return this.renderSquare(key, i++);
+        })
+        return (<div key={key} className='board-row'>{cols}</div>);
+      })
     return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
+      <div>{board}</div>
     );
   }
 }
@@ -110,6 +102,7 @@ class Game extends React.Component {
       <div className="game">
         <div className="game-board">
           <Board
+            size={{rows: 3, cols: 3,}}
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
           />
