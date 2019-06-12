@@ -15,23 +15,23 @@ function Square(props) { // child controlled component
 }
 
 class Board extends React.Component { // parent component
-  renderSquare(key, i) {
+  renderSquare(key, i, coords) {
     return (
       <Square
         key={key}
         value={this.props.squares[i]} // passing props: data flow from parent to children
-        onClick={() => this.props.onClick(i)}
+        onClick={() => this.props.onClick(i, coords)}
       />
     );
   }
 
   render() {
     let i = 0;
-    const board = Array(3).fill(null).map((_, index) => {
-      const cols = Array(3).fill(null).map((_, index) => {
-        return this.renderSquare(index, i++);
+    const board = Array(3).fill(null).map((_, rowIndex) => {
+      const cols = Array(3).fill(null).map((_, colIndex) => {
+        return this.renderSquare(colIndex, i++, [colIndex + 1, rowIndex + 1]);
       })
-      return (<div key={index} className='board-row'>{cols}</div>);
+      return (<div key={rowIndex} className='board-row'>{cols}</div>);
     })
     return (<div>{board}</div>);
   }
@@ -49,17 +49,17 @@ class Game extends React.Component {
     };
   }
 
-  handleClick(i) {
+  handleClick(i, coords) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-
     if (calculateWinner(squares) || squares[i]) return;
 
     squares[i] = this.state.xIsNext ? 'x' : 'o';
 
     this.setState({
       history: history.concat([{
+        coords: coords,
         squares: squares,
       }]),
       stepNumber: history.length,
@@ -81,7 +81,7 @@ class Game extends React.Component {
 
     const moves = history.map((step, move) => {
       const desc = move ?
-        'Go to move #' + move :
+        `[${step.coords.join(', ')}] Go to move # ${move}` :
         'Go to game start';
 
       return (
@@ -102,7 +102,7 @@ class Game extends React.Component {
         <div className="game-board">
           <Board
             squares={current.squares}
-            onClick={(i) => this.handleClick(i)}
+            onClick={(i, coords) => this.handleClick(i, coords)}
           />
         </div>
         <div className="game-info">
