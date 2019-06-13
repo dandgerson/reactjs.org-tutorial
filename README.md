@@ -1,5 +1,7 @@
 # Tic-tac-toe Game from reactjs.org tutorial
 
+[demo](https://dandgerson.github.io/reactjs.org-tutorial/)
+
 ## Additional challenges
 
 - [x] Display the location for each move in the format (col, row) in the move history list
