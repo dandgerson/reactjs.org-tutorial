@@ -116,7 +116,7 @@ class Game extends React.Component {
     if (winner) status = 'Winner: ' + winner;
     else status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     
-    const ordering = this.state.orderIsAscending ? 'List by: ascending' : 'List by: descending';
+    const ordering = this.state.orderIsAscending ? 'descending' : 'ascending';
     const orderedMoves = this.state.orderIsAscending ? moves.slice() : moves.slice().reverse();
 
     return (
@@ -132,7 +132,7 @@ class Game extends React.Component {
           <button
             className="sort"
             onClick={() => this.changeMovesOrder()}
-          >{ordering}</button>
+          >List by: {ordering}</button>
           <ul className="move-list">{orderedMoves}</ul>
         </div>
       </div>
