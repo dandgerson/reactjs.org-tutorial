@@ -55,7 +55,7 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) return;
+    if (calculateWin(squares) || squares[i]) return;
 
     const moveList = document.querySelector('.move-list');
     moveList.querySelector('.active') && this.deactivateMoveList();
@@ -97,7 +97,7 @@ class Game extends React.Component {
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+    const win = calculateWin(current.squares);
     const moves = history.map((step, move) => {
       const desc = move ?
       `[${step.coords.join(', ')}] Go to move # ${move}` :
@@ -112,9 +112,18 @@ class Game extends React.Component {
       )
     });
     
+    const squares = document.querySelectorAll('.square');
     let status;
-    if (winner) status = 'Winner: ' + winner;
-    else status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    if (win) {
+      status = 'Winner: ' + win.winner;
+      win.line.forEach(el => squares[el].classList.add('win'));
+    } else {
+      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      [...squares].forEach(el => el.classList.remove('win'));
+
+    }
+
+    
     
     const ordering = this.state.orderIsAscending ? 'descending' : 'ascending';
     const orderedMoves = this.state.orderIsAscending ? moves.slice() : moves.slice().reverse();
@@ -149,13 +158,13 @@ ReactDOM.render(
 
 // ========================================
 
-function calculateWinner(squares) {
+function calculateWin(squares) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
     [0, 3, 6],
-    [1, 2, 7],
+    [1, 4, 7],
     [2, 5, 8],
     [0, 4, 8],
     [2, 4, 6],
@@ -163,7 +172,10 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return {
+        winner: squares[a],
+        line: lines[i],
+      };
     }
   }
   return null;

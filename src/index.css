@@ -56,3 +56,7 @@ ul {
 .move-list .active {
   font-weight: bold;
 } 
+
+.win {
+  border: 3px solid black;
+}
