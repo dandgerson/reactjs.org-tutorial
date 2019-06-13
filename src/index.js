@@ -42,6 +42,7 @@ class Game extends React.Component {
     super(props);
     this.state = {
       history: [{
+        coords: null,
         squares: Array(9).fill(null),
       }],
       stepNumber: 0,
@@ -87,9 +88,6 @@ class Game extends React.Component {
   }
   
   changeMovesOrder() {
-    const moves = document.querySelectorAll('.move-list li');
-    moves[0].parentElement.append(...[...moves].reverse());
-
     this.setState({
       orderIsAscending: !this.state.orderIsAscending,
     })
@@ -112,13 +110,14 @@ class Game extends React.Component {
           </button>
         </li>
       )
-    })
+    });
     
     let status;
     if (winner) status = 'Winner: ' + winner;
     else status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     
-    const ordering = this.state.orderIsAscending ? 'List by: descending' : 'List by: ascending';
+    const ordering = this.state.orderIsAscending ? 'List by: ascending' : 'List by: descending';
+    const orderedMoves = this.state.orderIsAscending ? moves.slice() : moves.slice().reverse();
 
     return (
       <div className="game">
@@ -134,7 +133,7 @@ class Game extends React.Component {
             className="sort"
             onClick={() => this.changeMovesOrder()}
           >{ordering}</button>
-          <ul className="move-list" >{moves}</ul>
+          <ul className="move-list">{orderedMoves}</ul>
         </div>
       </div>
     );
