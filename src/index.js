@@ -67,7 +67,11 @@ class Game extends React.Component {
     });
   }
 
-  jumpTo(step) {
+  jumpTo(event, step) {
+    const moves = document.querySelectorAll('.moves li');
+    [...moves].forEach(li => li.querySelector('button').classList.remove('active'));
+    event.target.classList.add('active');
+
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2 === 0),
@@ -85,8 +89,8 @@ class Game extends React.Component {
         'Go to game start';
 
       return (
-        <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>
+        <li className="move" key={move}>
+          <button onClick={(event) => this.jumpTo(event, move)}>
             {desc}
           </button>
         </li>
@@ -107,7 +111,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <ol className="moves" >{moves}</ol>
         </div>
       </div>
     );
