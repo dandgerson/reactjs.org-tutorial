@@ -71,11 +71,17 @@ class Game extends React.Component {
     const moves = document.querySelectorAll('.moves li');
     [...moves].forEach(li => li.querySelector('button').classList.remove('active'));
     event.target.classList.add('active');
-
+    
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2 === 0),
     })
+  }
+  
+  sortMoves() {
+    const moves = document.querySelectorAll('.moves li');
+    moves[0].parentElement.append(...[...moves].reverse());
+
   }
 
   render() {
@@ -111,7 +117,11 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol className="moves" >{moves}</ol>
+          <button
+            className="sort"
+            onClick={this.sortMoves}
+          >Sort moves</button>
+          <ul className="moves" >{moves}</ul>
         </div>
       </div>
     );
