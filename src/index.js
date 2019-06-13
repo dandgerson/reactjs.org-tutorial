@@ -60,6 +60,7 @@ class Game extends React.Component {
     const moveList = document.querySelector('.move-list');
     moveList.querySelector('.active') && this.deactivateMoveList();
 
+
     squares[i] = this.state.xIsNext ? 'x' : 'o';
 
     this.setState({
@@ -80,7 +81,8 @@ class Game extends React.Component {
   jumpTo(event, step) {
     this.deactivateMoveList();
     event.target.classList.add('active');
-    
+    document.querySelector('.game-board>div').classList.remove('end-game')
+
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2 === 0),
@@ -116,15 +118,17 @@ class Game extends React.Component {
     let status;
     if (win) {
       status = 'Winner: ' + win.winner;
-      win.line.forEach(el => squares[el].classList.add('win'));
+      win.line.forEach(el => squares[el].classList.add('end-game'));
     } else {
+      [...squares].forEach(el => el.classList.remove('end-game'));
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-      [...squares].forEach(el => el.classList.remove('win'));
+      if (!current.squares.filter(square => !square).length) {
+        status = 'The Draw.';
+        document.querySelector('.game-board>div').classList.add('end-game')
+      }
 
     }
 
-    
-    
     const ordering = this.state.orderIsAscending ? 'descending' : 'ascending';
     const orderedMoves = this.state.orderIsAscending ? moves.slice() : moves.slice().reverse();
 
