@@ -57,9 +57,7 @@ class Game extends React.Component {
     const squares = current.squares.slice();
     if (calculateWin(squares) || squares[i]) return;
 
-    const moveList = document.querySelector('.move-list');
-    moveList.querySelector('.active') && this.deactivateMoveList();
-
+    document.querySelector('.move-list .active') && this.removeSelection();
 
     squares[i] = this.state.xIsNext ? 'x' : 'o';
 
@@ -73,33 +71,35 @@ class Game extends React.Component {
     });
   }
 
-  deactivateMoveList() {
-    const moves = document.querySelectorAll('.move-list li');
-    [...moves].forEach(li => li.querySelector('button').classList.remove('active'));
+  removeSelection() {
+    const DOMMoveItems = document.querySelectorAll('.move-list li');
+    [...DOMMoveItems].forEach(item => item
+      .querySelector('button')
+      .classList.remove('active'));
   }
 
   jumpTo(event, step) {
-    this.deactivateMoveList();
+    this.removeSelection();
     event.target.classList.add('active');
-    document.querySelector('.game-board>div').classList.remove('end-game')
+    document.querySelector('.game-board>div').classList.remove('end-game');
 
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2 === 0),
-    })
+    });
   }
-  
+
   changeMovesOrder() {
     this.setState({
       orderIsAscending: !this.state.orderIsAscending,
-    })
-
+    });
   }
 
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const win = calculateWin(current.squares);
+
     const moves = history.map((step, move) => {
       const desc = move ?
       `[${step.coords.join(', ')}] Go to move # ${move}` :
@@ -111,22 +111,20 @@ class Game extends React.Component {
             {desc}
           </button>
         </li>
-      )
+      );
     });
-    
-    const squares = document.querySelectorAll('.square');
+
+    const DOMsquares = document.querySelectorAll('.square');
     let status;
     if (win) {
       status = 'Winner: ' + win.winner;
-      win.line.forEach(el => squares[el].classList.add('end-game'));
-    } else {
-      [...squares].forEach(el => el.classList.remove('end-game'));
+      win.line.forEach(el => DOMsquares[el].classList.add('end-game'));
+    } else if (current.squares.filter(square => !square).length !== 0) {
+      [...DOMsquares].forEach(el => el.classList.remove('end-game'));
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-      if (!current.squares.filter(square => !square).length) {
-        status = 'The Draw.';
-        document.querySelector('.game-board>div').classList.add('end-game')
-      }
-
+    } else {
+      status = 'The Draw.';
+      document.querySelector('.game-board>div').classList.add('end-game')
     }
 
     const ordering = this.state.orderIsAscending ? 'descending' : 'ascending';
