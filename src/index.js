@@ -100,35 +100,39 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const win = calculateWin(current.squares);
 
-    const moves = history.map((step, move) => {
-      const desc = move ?
-      `[${step.coords.join(', ')}] Go to move # ${move}` :
-      'Go to game start';
+    const moves = history.map((move, step) => {
+      const desc = step ?
+        `[${move.coords.join(', ')}] Go to move # ${step}` :
+        'Go to game start';
       
       return (
-        <li className="move" key={move}>
-          <button onClick={(event) => this.jumpTo(event, move)}>
+        <li className="move" key={step}>
+          <button onClick={(event) => this.jumpTo(event, step)}>
             {desc}
           </button>
         </li>
       );
     });
 
+    let status = '';
     const DOMsquares = document.querySelectorAll('.square');
-    let status;
     if (win) {
       status = 'Winner: ' + win.winner;
       win.line.forEach(el => DOMsquares[el].classList.add('end-game'));
     } else if (current.squares.filter(square => !square).length !== 0) {
-      [...DOMsquares].forEach(el => el.classList.remove('end-game'));
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      [...DOMsquares].forEach(el => el.classList.remove('end-game'));
     } else {
-      status = 'The Draw.';
+      status = 'The Draw';
       document.querySelector('.game-board>div').classList.add('end-game')
     }
 
-    const ordering = this.state.orderIsAscending ? 'descending' : 'ascending';
-    const orderedMoves = this.state.orderIsAscending ? moves.slice() : moves.slice().reverse();
+    const ordering = this.state.orderIsAscending ?
+      'descending' :
+      'ascending';
+    const orderedMoves = this.state.orderIsAscending ?
+      moves.slice() :
+      moves.slice().reverse();
 
     return (
       <div className="game">
@@ -181,4 +185,4 @@ function calculateWin(squares) {
     }
   }
   return null;
-}
+};
